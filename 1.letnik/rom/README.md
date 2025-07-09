@@ -12,6 +12,3 @@ Uporabljala bom program *Mathematica*.
 4. Primerjala posamezne vrste nepremičnin z njihovimi indeksi po letih, dodala nekaj grafov
 5. Predgledala v katerih letih je imela posamezna vrsta maksimalen in minimalen indeks cen
 6. Analizirala vse pridobljene vrednosti in podala ugotovitve
-
-### Posnetek:
-[POVEZAVA](https://youtu.be/1iqPsN_x-iM)
