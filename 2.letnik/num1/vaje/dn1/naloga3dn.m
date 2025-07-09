@@ -1,0 +1,33 @@
+f = @(x) 5*cos(x-exp(x)) - x;
+a = 1;
+b = 2;
+stevilo = 0;
+c = (a*f(b)-b*f(a))/(f(b)-f(a));
+
+for i=1:4
+    c = (a*f(b)-b*f(a))/(f(b)-f(a));
+    if abs(f(c))<10^(-16)
+        break
+    end
+    if f(a)*f(c)<0
+        b = c;
+    elseif f(b)*f(c)<0 
+        a = c;
+    end
+        
+end
+c;
+ 
+while abs(a-b) > 10e-16
+    if f(a)*f(c)<0
+        b = c;
+    elseif f(b)*f(c)<0 
+        a = c;
+    end
+    c = (a*f(b)-b*f(a))/(f(b)-f(a));
+    stevilo = stevilo + 1; 
+end
+stevilo
+
+%fplot(@(x) f(x), [-2,2])
+%grid on
