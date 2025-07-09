@@ -1,0 +1,8 @@
+00:00 Ulovljena napaka
+07:16 Zgled: funkcija, ki izračuna povprečje podatkov v seznamu
+12:52 Javljanje napak (raise Exception)
+16:56 Različne izjeme napak
+26:34 Zgled: funkcija, ki sporoči ali je vnos permutacija
+38:50 Testiranje delovaja funkcije permutacije
+42:00 Nov problem pri funkciji permutacija, ki od uporabnika zahteva vnos vrstnega reda permutacije
+43:58 Rešitev problema za vrstni red vnosa permutacije 

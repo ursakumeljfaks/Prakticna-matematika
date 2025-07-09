@@ -1,0 +1,8 @@
+Vhod:   sever6458
+        severovzhod6403
+        vzhod6399
+
+Kamera 1: 1228
+Kamera 2: 31824
+Kamera 3: 533
+Hala: 5885

@@ -1,0 +1,6 @@
+A1: 25395793920000
+A2: 1718
+A3: 1786
+B1: Uuaiunoiaio
+B2: 121126.102
+B3: ['Sarndive8', '1934', 'Gugenda2', 'Ntimbchana5']
