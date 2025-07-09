@@ -1,0 +1,97 @@
+-- Vrnite tabelo imen in priimkov vseh oseb, ki jim je ime Matija
+SELECT ime, priimek FROM osebe
+WHERE ime == 'Matija';
+
+-- Vrnite tabelo imen in priimkov vseh oseb, urejeno po priimku
+SELECT ime, priimek FROM osebe
+GROUP BY priimek;
+
+-- Vrnite imena vseh predmetov na praktični matematiki (smer: 1PrMa)
+SELECT ime FROM predmeti
+WHERE smer == '1PrMa';
+
+-- Vrnite vse podatke o skupinah z manj kot eno uro
+SELECT * FROM skupine
+WHERE ure < 1;
+
+-- Vrnite število vseh predmetov na posamezni smeri
+SELECT COUNT(ime), smer FROM predmeti
+GROUP BY smer;
+
+-- Vrnite imena tistih predmetov, ki se pojavljajo na več smereh
+SELECT p1.ime FROM predmeti p1
+WHERE p1.ime IN (SELECT p2.ime FROM predmeti p2 WHERE p1.ime = p2.ime AND p1.id != p2.id)
+GROUP BY p1.ime;
+
+-- Vrnite imena in vse pripadajoče smeri tistih predmetov, ki se pojavljajo na več smereh
+SELECT p1.ime, p1.smer || ', ' || p2.smer AS 'par predmetov' FROM predmeti p1, predmeti p2
+WHERE p1.ime = p2.ime AND p1.id != p2.id AND p1.id < p2.id
+ORDER BY p1.ime;
+
+-- Vrnite skupno število ur vsake osebe
+SELECT osebe.ime, osebe.priimek, SUM(skupine.ure) FROM osebe
+LEFT JOIN skupine ON osebe.id = skupine.učitelj 
+GROUP BY osebe.id;
+
+-- Vrnite imena in priimke vseh predavateljev,
+-- torej tistih, ki imajo kakšno skupino tipa P
+SELECT osebe.ime, osebe.priimek, skupine.tip FROM osebe
+JOIN skupine ON osebe.id = skupine.učitelj AND skupine.tip = 'P'
+GROUP BY osebe.id;
+
+-- Vrnite imena in priimke vseh predavateljev,
+-- ki izvajajo tako predavanja (tip P) kot vaje (tipa V ali L)
+
+SELECT osebe.ime, osebe.priimek FROM osebe
+WHERE osebe.id IN (SELECT s1.učitelj FROM skupine s1, skupine s2
+WHERE s1.učitelj = s2.učitelj AND s1.tip = 'P' AND (s2.tip = 'V' OR s2.tip = 'L')
+GROUP BY s1.učitelj);
+
+-- Vrnite imena in smeri vseh predmetov, ki imajo kakšen seminar
+SELECT dodelitve.predmet FROM dodelitve
+JOIN skupine ON skupine.id = dodelitve.skupina AND skupine.tip = 'S';
+
+SELECT predmeti.ime, predmeti.smer FROM predmeti
+JOIN dodelitve ON predmeti.id = dodelitve.predmet
+JOIN skupine ON skupine.id = dodelitve.skupina
+WHERE skupine.tip = 'S';
+
+-- Vsem predmetom na smeri 2PeMa spremenite smer na PeMa
+UPDATE predmeti
+SET smer = 'PeMa'
+WHERE smer = '2PeMa';
+
+-- Izbrišite vse predmete, ki niso dodeljeni nobeni skupini
+
+-- Za vsak predmet, ki se pojavi tako na prvi kot drugi stopnji
+-- (smer se začne z 1 oz. 2), dodajte nov predmet z istim imenom
+-- in smerjo 0Mate (stolpca id ne nastavljajte, ker se bo samodejno
+-- določil)
+
+INSERT INTO predmeti (ime, smer) 
+SELECT ime, '0Mate' FROM predmeti
+WHERE smer LIKE '1%' OR smer LIKE '2%';
+
+-- Za vsako smer izpišite število različnih oseb, ki na njej poučujejo
+SELECT predmeti.smer, COUNT(DISTINCT dodelitve.skupina) FROM skupine
+JOIN dodelitve ON skupine.id = dodelitve.skupina
+JOIN predmeti ON dodelitve.predmet = predmeti.id
+GROUP BY predmeti.smer;
+-- Vrnite pare ID-jev tistih oseb, ki sodelujejo pri vsaj dveh
+-- predmetih (ne glede na tip skupine), pri čemer naj bo prvi ID
+-- v paru manjši od drugega, pari pa naj se ne ponavljajo
+
+
+-- Za vsako osebo (izpišite jo z ID-jem, imenom in priimkom) vrnite
+-- skupno število ur vaj (tako avditornih kot laboratorijskih),
+-- pri čemer naj bo to enako 0, če oseba ne izvaja nobenih vaj
+SELECT osebe.id, osebe.ime, osebe.priimek, SUM(CASE WHEN skupine.tip IN ('L', 'V') THEN skupine.ure ELSE 0 END) AS skupno_stevilo_ur_vaj FROM osebe
+LEFT JOIN skupine ON skupine.učitelj = osebe.id
+GROUP BY osebe.id, osebe.ime, osebe.priimek; 
+
+-- Vrnite ID-je, imena in smeri predmetov, za katere se izvaja
+-- seminar, ne pa tudi avditorne ali laboratorijske vaje
+SELECT predmeti.id, predmeti.ime, predmeti.smer FROM predmeti
+JOIN dodelitve ON dodelitve.predmet = predmeti.id 
+JOIN skupine ON skupine.id = dodelitve.skupina WHERE skupine.tip = 'S';
+

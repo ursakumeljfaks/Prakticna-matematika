@@ -1,0 +1,8 @@
+--Delamo z originalno bazo filmi (ena tabela). Vsem filmom določenega leta, ki imajo oceno nižjo od povprečja filmov v tem letu, 
+--dodaj dvakratno razliko med povprečjem in prvotno razliko. Tako bo film z id 22100 namesto ocene 8.4 imel oceno 8.6, 
+--saj je prvotno poprečje filmov iz leta 1931 8.5.
+
+UPDATE filmi 
+SET ocena = ocena + 2 * ((SELECT AVG(ocena) FROM filmi AS f2 WHERE f2.leto = filmi.leto) - ocena)
+WHERE ocena < (SELECT AVG(ocena) FROM filmi AS f2 WHERE f2.leto = filmi.leto);
+
